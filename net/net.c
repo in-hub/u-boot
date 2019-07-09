@@ -474,11 +474,13 @@ restart:
 			break;
 #endif
 
+#if defined(CONFIG_CMD_BOOTP)
 		case BOOTP:
 			bootp_reset();
 			net_ip.s_addr = 0;
 			bootp_request();
 			break;
+#endif
 
 #if defined(CONFIG_CMD_RARP)
 		case RARP:

@@ -129,7 +129,7 @@ static int get_bootfile_path(const char *file_path, char *bootfile_path,
 
 static int (*do_getfile)(cmd_tbl_t *cmdtp, const char *file_path, char *file_addr);
 
-#ifdef CONFIG_CMD_NET
+#ifdef CONFIG_CMD_TFTPBOOT
 static int do_get_tftp(cmd_tbl_t *cmdtp, const char *file_path, char *file_addr)
 {
 	char *tftp_argv[] = {"tftp", NULL, NULL, NULL};
@@ -265,7 +265,7 @@ static int get_pxe_file(cmd_tbl_t *cmdtp, const char *file_path,
 	return 1;
 }
 
-#ifdef CONFIG_CMD_NET
+#ifdef CONFIG_CMD_TFTPBOOT
 
 #define PXELINUX_DIR "pxelinux.cfg/"
 
@@ -689,8 +689,10 @@ static int label_boot(cmd_tbl_t *cmdtp, struct pxe_label *label)
 	if ((label->ipappend & 0x3) || label->append) {
 		char bootargs[CONFIG_SYS_CBSIZE] = "";
 		char finalbootargs[CONFIG_SYS_CBSIZE];
+		char* previousbootargs = env_get("bootargs");
 
-		if (strlen(label->append ?: "") +
+		if (strlen(previousbootargs) +
+			strlen(label->append ?: "") +
 		    strlen(ip_str) + strlen(mac_str) + 1 > sizeof(bootargs)) {
 			printf("bootarg overflow %zd+%zd+%zd+1 > %zd\n",
 			       strlen(label->append ?: ""),
@@ -698,8 +700,10 @@ static int label_boot(cmd_tbl_t *cmdtp, struct pxe_label *label)
 			       sizeof(bootargs));
 			return 1;
 		} else {
+			strcpy(bootargs, previousbootargs);
+			strcat(bootargs, " ");
 			if (label->append)
-				strncpy(bootargs, label->append,
+				strncat(bootargs, label->append,
 					sizeof(bootargs));
 			strcat(bootargs, ip_str);
 			strcat(bootargs, mac_str);
@@ -1631,7 +1635,7 @@ static void handle_pxe_menu(cmd_tbl_t *cmdtp, struct pxe_menu *cfg)
 	boot_unattempted_labels(cmdtp, cfg);
 }
 
-#ifdef CONFIG_CMD_NET
+#ifdef CONFIG_CMD_TFTPBOOT
 /*
  * Boots a system using a pxe file
  *
