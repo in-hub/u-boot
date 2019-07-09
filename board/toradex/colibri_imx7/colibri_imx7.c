@@ -155,8 +155,10 @@ static int setup_lcd(void)
  */
 void board_preboot_os(void)
 {
+#ifdef CONFIG_VIDEO_MXS
 	gpio_direction_output(GPIO_PWM_A, 1);
 	gpio_direction_output(GPIO_BL_ON, 0);
+#endif
 }
 
 #ifdef CONFIG_FEC_MXC

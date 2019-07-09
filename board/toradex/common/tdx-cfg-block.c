@@ -346,7 +346,7 @@ static int get_cfgblock_interactive(void)
 		}
 #endif
 	} else if (!strcmp("imx7d", soc))
-		tdx_hw_tag.prodid = COLIBRI_IMX7D;
+		tdx_hw_tag.prodid = COLIBRI_IMX7D_EMMC;
 	else if (!strcmp("imx7s", soc))
 		tdx_hw_tag.prodid = COLIBRI_IMX7S;
 	else if (is_cpu_type(MXC_CPU_IMX8QXP))

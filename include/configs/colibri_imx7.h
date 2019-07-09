@@ -115,14 +115,18 @@
 		"run fdt_fixup && bootz ${kernel_addr_r} - ${fdt_addr_r}\0" \
 
 #if defined(CONFIG_TARGET_COLIBRI_IMX7_NAND)
+#ifndef CONFIG_BOOTCOMMAND
 #define CONFIG_BOOTCOMMAND "run ubiboot ; echo ; echo ubiboot failed ; " \
 	"setenv fdtfile ${soc}-colibri-${fdt_board}.dtb && run distro_bootcmd;"
+#endif
 #define MODULE_EXTRA_ENV_SETTINGS \
 	"mtdparts=" CONFIG_MTDPARTS_DEFAULT "\0" \
 	UBI_BOOTCMD
 #elif defined(CONFIG_TARGET_COLIBRI_IMX7_EMMC)
+#ifndef CONFIG_BOOTCOMMAND
 #define CONFIG_BOOTCOMMAND "run emmcboot ; echo ; echo emmcboot failed ; " \
 	"setenv fdtfile ${soc}-colibri-emmc-${fdt_board}.dtb && run distro_bootcmd;"
+#endif
 #define MODULE_EXTRA_ENV_SETTINGS \
 	"variant=-emmc\0" \
 	EMMC_BOOTCMD
@@ -140,7 +144,8 @@
 	func(USB, usb, 0) \
 	func(DHCP, dhcp, na)
 #endif
-#include <config_distro_bootcmd.h>
+#include <rauc-boot.h>
+#define BOOTENV RAUC_BOOTENV
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	BOOTENV \
@@ -197,11 +202,12 @@
 
 #if defined(CONFIG_ENV_IS_IN_MMC)
 /* Environment in eMMC, before config block at the end of 1st "boot sector" */
-#define CONFIG_ENV_SIZE			(8 * 1024)
-#define CONFIG_ENV_OFFSET		(-CONFIG_ENV_SIZE + \
-					 CONFIG_TDX_CFG_BLOCK_OFFSET)
+#define CONFIG_ENV_SIZE			SZ_128K
+#define CONFIG_ENV_OFFSET		0xA0000
+#define CONFIG_ENV_OFFSET_REDUND    (CONFIG_ENV_OFFSET + CONFIG_ENV_SIZE)
+#define CONFIG_SYS_REDUNDAND_ENVIRONMENT
 #define CONFIG_SYS_MMC_ENV_DEV		0
-#define CONFIG_SYS_MMC_ENV_PART		1
+#define CONFIG_SYS_MMC_ENV_PART		0
 #elif defined(CONFIG_ENV_IS_IN_NAND)
 #define CONFIG_ENV_SECT_SIZE		(128 * 1024)
 #define CONFIG_ENV_OFFSET		(28 * CONFIG_ENV_SECT_SIZE)
