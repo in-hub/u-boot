@@ -32,6 +32,7 @@
 #include <miiphy.h>
 #include <cpsw.h>
 #include <power/tps65217.h>
+#include <power/tps65218.h>
 #include <power/tps65910.h>
 #include <environment.h>
 #include <watchdog.h>
@@ -266,7 +267,7 @@ const struct dpll_params *get_dpll_ddr_params(void)
 
 	if (board_is_evm_sk())
 		return &dpll_ddr3_303MHz[ind];
-	else if (board_is_pb() || board_is_bone_lt() || board_is_icev2())
+	else if (board_is_pb() || board_is_bone_lt() || board_is_icev2() || board_is_gm100())
 		return &dpll_ddr3_400MHz[ind];
 	else if (board_is_evm_15_or_later())
 		return &dpll_ddr3_303MHz[ind];
@@ -297,7 +298,7 @@ const struct dpll_params *get_dpll_mpu_params(void)
 	if (bone_not_connected_to_ac_power())
 		freq = MPUPLL_M_600;
 
-	if (board_is_pb() || board_is_bone_lt())
+	if (board_is_pb() || board_is_bone_lt() || board_is_gm100())
 		freq = MPUPLL_M_1000;
 
 	switch (freq) {
@@ -418,6 +419,59 @@ static void scale_vcores_bone(int freq)
 		puts("tps65217_reg_write failure\n");
 }
 
+static void scale_vcores_hub_gm100(int freq)
+{
+	int mpu_vdd;
+
+#ifndef CONFIG_DM_I2C
+	if (i2c_probe(TPS65218_CHIP_PM))
+		return;
+#else
+	if (power_tps65218_init(0))
+		return;
+#endif
+
+	switch (freq) {
+	case MPUPLL_M_1000:
+		mpu_vdd = TPS65218_DCDC_VOLT_SEL_1330MV;
+		break;
+	case MPUPLL_M_800:
+		mpu_vdd = TPS65218_DCDC_VOLT_SEL_1260MV;
+		break;
+	case MPUPLL_M_720:
+		mpu_vdd = TPS65218_DCDC_VOLT_SEL_1200MV;
+		break;
+	case MPUPLL_M_600:
+		mpu_vdd = TPS65218_DCDC_VOLT_SEL_1100MV;
+		break;
+	case MPUPLL_M_300:
+		mpu_vdd = TPS65218_DCDC_VOLT_SEL_0950MV;
+		break;
+	default:
+		puts("Unknown MPU clock, not scaling\n");
+		return;
+	}
+
+	/* Set DCDC1 (CORE) voltage to 1.1V */
+	if (tps65218_voltage_update(TPS65218_DCDC1,
+				    TPS65218_DCDC_VOLT_SEL_1100MV)) {
+		printf("%s failure\n", __func__);
+		return;
+	}
+
+	/* Set DCDC2 (MPU) voltage */
+	if (tps65218_voltage_update(TPS65218_DCDC2, mpu_vdd)) {
+		printf("%s failure\n", __func__);
+		return;
+	}
+
+	/* Set DCDC3 (DDR) voltage */
+	if (tps65218_voltage_update(TPS65218_DCDC3, TPS65218_DCDC3_VOLT_SEL_1350MV)) {
+		printf("%s failure\n", __func__);
+		return;
+	}
+}
+
 void scale_vcores_generic(int freq)
 {
 	int sil_rev, mpu_vdd;
@@ -479,6 +533,8 @@ void scale_vcores(void)
 
 	if (board_is_beaglebonex())
 		scale_vcores_bone(freq);
+	else if (board_is_gm100())
+		scale_vcores_hub_gm100(freq);
 	else
 		scale_vcores_generic(freq);
 }
@@ -556,7 +612,7 @@ void sdram_init(void)
 	if (board_is_evm_sk())
 		config_ddr(303, &ioregs_evmsk, &ddr3_data,
 			   &ddr3_cmd_ctrl_data, &ddr3_emif_reg_data, 0);
-	else if (board_is_pb() || board_is_bone_lt())
+	else if (board_is_pb() || board_is_bone_lt() || board_is_gm100())
 		config_ddr(400, &ioregs_bonelt,
 			   &ddr3_beagleblack_data,
 			   &ddr3_beagleblack_cmd_ctrl_data,
@@ -816,8 +872,13 @@ int board_late_init(void)
 
 	if (board_is_bbg1())
 		name = "BBG1";
+
 	if (board_is_bben())
 		name = "BBEN";
+
+	if (board_is_gm100())
+		name = "GM100";
+
 	set_board_info_env(name);
 
 	/*
@@ -940,6 +1001,8 @@ int board_fit_config_name_match(const char *name)
 	else if (board_is_bbg1() && !strcmp(name, "am335x-bonegreen"))
 		return 0;
 	else if (board_is_icev2() && !strcmp(name, "am335x-icev2"))
+		return 0;
+	else if (board_is_gm100() && !strcmp(name, "am335x-gm100"))
 		return 0;
 	else
 		return -1;

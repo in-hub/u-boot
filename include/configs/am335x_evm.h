@@ -90,7 +90,8 @@
 	BOOT_TARGET_PXE(func) \
 	BOOT_TARGET_DHCP(func)
 
-#include <config_distro_bootcmd.h>
+#include <rauc-boot.h>
+#define BOOTENV RAUC_BOOTENV
 
 #ifndef CONFIG_SPL_BUILD
 #include <environment/ti/dfu.h>
@@ -185,7 +186,10 @@
 #define CONFIG_SYS_I2C_EEPROM_ADDR_LEN	2
 
 /* PMIC support */
+#define CONFIG_POWER
+#define CONFIG_POWER_I2C
 #define CONFIG_POWER_TPS65217
+#define CONFIG_POWER_TPS65218
 #define CONFIG_POWER_TPS65910
 
 /* SPL */
@@ -283,10 +287,10 @@
 #define CONFIG_ENV_SECT_SIZE		(4 << 10) /* 4 KB sectors */
 #define CONFIG_ENV_OFFSET		(768 << 10) /* 768 KiB in */
 #define CONFIG_ENV_OFFSET_REDUND	(896 << 10) /* 896 KiB in */
-#elif defined(CONFIG_EMMC_BOOT)
-#define CONFIG_SYS_MMC_ENV_DEV		1
+#elif defined(CONFIG_SD_BOOT)
+#define CONFIG_SYS_MMC_ENV_DEV		0
 #define CONFIG_SYS_MMC_ENV_PART		0
-#define CONFIG_ENV_OFFSET		0x260000
+#define CONFIG_ENV_OFFSET		0xA0000
 #define CONFIG_ENV_OFFSET_REDUND	(CONFIG_ENV_OFFSET + CONFIG_ENV_SIZE)
 #define CONFIG_SYS_REDUNDAND_ENVIRONMENT
 #define CONFIG_SYS_MMC_MAX_DEVICE	2
@@ -302,10 +306,12 @@
 
 /* SPI flash. */
 
+#if 0
 /* Network. */
 #define CONFIG_PHY_SMSC
 /* Enable Atheros phy driver */
 #define CONFIG_PHY_ATHEROS
+#endif
 
 /*
  * NOR Size = 16 MiB

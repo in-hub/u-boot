@@ -23,6 +23,23 @@
 #define EMIF_OCP_CONFIG_BEAGLEBONE_BLACK       0x00141414
 #define EMIF_OCP_CONFIG_AM335X_EVM             0x003d3d3d
 
+#ifdef CONFIG_SYS_BOARD_GM100
+
+static inline int board_is_bone(void) { return 0; }
+static inline int board_is_bone_lt(void) { return 0; }
+static inline int board_is_gm100(void) { return 1; }
+static inline int board_is_pb(void) { return 0; }
+static inline int board_is_bbg1(void) { return 0; }
+static inline int board_is_bben(void) { return 0; }
+static inline int board_is_beaglebonex(void) { return 0; }
+static inline int board_is_evm_sk(void) { return 0; }
+static inline int board_is_idk(void) { return 0; }
+static inline int board_is_gp_evm(void) { return 0; }
+static inline int board_is_evm_15_or_later(void) { return 0; }
+static inline int board_is_icev2(void) { return 0; }
+
+#else
+
 static inline int board_is_bone(void)
 {
 	return board_ti_is("A335BONE");
@@ -31,6 +48,11 @@ static inline int board_is_bone(void)
 static inline int board_is_bone_lt(void)
 {
 	return board_ti_is("A335BNLT");
+}
+
+static inline int board_is_gm100(void)
+{
+	return board_ti_is("A335GM100");
 }
 
 static inline int board_is_pb(void)
@@ -79,6 +101,8 @@ static inline int board_is_icev2(void)
 {
 	return board_ti_is("A335_ICE") && !strncmp("2", board_ti_get_rev(), 1);
 }
+
+#endif
 
 /*
  * We have three pin mux functions that must exist.  We must be able to enable

@@ -420,6 +420,8 @@ void enable_board_pin_mux(void)
 		configure_module_pin_mux(uart3_icev2_pin_mux);
 		configure_module_pin_mux(rmii1_pin_mux);
 		configure_module_pin_mux(spi0_pin_mux);
+	} else if (board_is_gm100()) {
+		configure_module_pin_mux(mii1_pin_mux);
 	} else {
 		/* Unknown board. We might still be able to boot. */
 		puts("Bad EEPROM or unknown board, cannot configure pinmux.");
