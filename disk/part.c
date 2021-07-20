@@ -159,6 +159,9 @@ void dev_print (struct blk_desc *dev_desc)
 	case IF_TYPE_VIRTIO:
 		printf("%s VirtIO Block Device\n", dev_desc->vendor);
 		break;
+	case IF_TYPE_UBI:
+		puts("UBI block device\n");
+		break;
 	case IF_TYPE_DOC:
 		puts("device type DOC\n");
 		return;
@@ -471,28 +474,6 @@ int blk_get_device_part_str(const char *ifname, const char *dev_part_str,
 		info->type_guid[0] = 0;
 #endif
 
-		return 0;
-	}
-#endif
-
-#ifdef CONFIG_CMD_UBIFS
-	/*
-	 * Special-case ubi, ubi goes through a mtd, rather than through
-	 * a regular block device.
-	 */
-	if (0 == strcmp(ifname, "ubi")) {
-		if (!ubifs_is_mounted()) {
-			printf("UBIFS not mounted, use ubifsmount to mount volume first!\n");
-			return -EINVAL;
-		}
-
-		*dev_desc = NULL;
-		memset(info, 0, sizeof(*info));
-		strcpy((char *)info->type, BOOT_PART_TYPE);
-		strcpy((char *)info->name, "UBI");
-#if CONFIG_IS_ENABLED(PARTITION_UUIDS)
-		info->uuid[0] = 0;
-#endif
 		return 0;
 	}
 #endif

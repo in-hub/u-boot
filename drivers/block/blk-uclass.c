@@ -29,6 +29,7 @@ static const char *if_typename_str[IF_TYPE_COUNT] = {
 	[IF_TYPE_EFI]		= "efi",
 	[IF_TYPE_VIRTIO]	= "virtio",
 	[IF_TYPE_PVBLOCK]	= "pvblock",
+	[IF_TYPE_UBI]		= "ubi",
 };
 
 static enum uclass_id if_type_uclass_id[IF_TYPE_COUNT] = {
@@ -45,6 +46,7 @@ static enum uclass_id if_type_uclass_id[IF_TYPE_COUNT] = {
 	[IF_TYPE_EFI]		= UCLASS_EFI,
 	[IF_TYPE_VIRTIO]	= UCLASS_VIRTIO,
 	[IF_TYPE_PVBLOCK]	= UCLASS_PVBLOCK,
+	[IF_TYPE_UBI]		= UCLASS_UBI,
 };
 
 static enum if_type if_typename_to_iftype(const char *if_typename)
@@ -118,7 +120,7 @@ struct blk_desc *blk_get_devnum_by_typename(const char *if_typename, int devnum)
 
 		debug("%s: if_type=%d, devnum=%d: %s, %d, %d\n", __func__,
 		      if_type, devnum, dev->name, desc->if_type, desc->devnum);
-		if (desc->devnum != devnum)
+		if (desc->if_type != if_type || desc->devnum != devnum)
 			continue;
 
 		/* Find out the parent device uclass */
