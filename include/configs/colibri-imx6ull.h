@@ -70,13 +70,16 @@
 		"run fdt_fixup && bootz ${kernel_addr_r} - ${fdt_addr_r}\0" \
 
 /* Run Distro Boot script if ubiboot fails */
+#if 0
 #define CONFIG_BOOTCOMMAND "run ubiboot || run distro_bootcmd;"
+#endif
 
 #define BOOT_TARGET_DEVICES(func) \
 	func(MMC, mmc, 0) \
 	func(USB, usb, 0) \
 	func(DHCP, dhcp, na)
-#include <config_distro_bootcmd.h>
+#include <rauc-boot.h>
+#define BOOTENV RAUC_BOOTENV
 
 #define DFU_ALT_NAND_INFO "imx6ull-bcb part 0,1;u-boot1 part 0,2;u-boot2 part 0,3;u-boot-env part 0,4;ubi partubi 0,5"
 
