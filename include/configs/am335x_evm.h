@@ -73,7 +73,8 @@
 	BOOT_TARGET_PXE(func) \
 	BOOT_TARGET_DHCP(func)
 
-#include <config_distro_bootcmd.h>
+#include <rauc-boot.h>
+#define BOOTENV RAUC_BOOTENV
 
 #ifndef CONFIG_SPL_BUILD
 #include <env/ti/dfu.h>
