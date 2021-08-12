@@ -15,7 +15,7 @@
 #include <cpu_func.h>
 
 #ifndef CONFIG_IMX8M
-const __weak struct rproc_att hostmap[] = { };
+extern const struct rproc_att hostmap[];
 
 static const struct rproc_att *get_host_mapping(unsigned long auxcore)
 {
