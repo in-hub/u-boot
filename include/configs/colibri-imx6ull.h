@@ -77,7 +77,8 @@
 	func(USB, usb, 0) \
 	func(DHCP, dhcp, na)
 #endif
-#include <config_distro_bootcmd.h>
+#include <rauc-boot.h>
+#define BOOTENV RAUC_BOOTENV
 
 #define CFG_EXTRA_ENV_SETTINGS \
 	BOOTENV \
