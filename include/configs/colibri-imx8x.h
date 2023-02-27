@@ -29,7 +29,9 @@
 	func(MMC, mmc, 0) \
 	func(USB, usb, 0) \
 	func(DHCP, dhcp, na)
-#include <config_distro_bootcmd.h>
+#include <rauc-boot.h>
+#define BOOTENV RAUC_BOOTENV
+
 
 /* Initial environment variables */
 #define CFG_EXTRA_ENV_SETTINGS \
