@@ -57,6 +57,9 @@
 	"  saveenv; " \
 	"  reset; " \
 	"fi; " \
+	"usb start; " \
+	"setenv bootargs boot=/dev/sda2 root=/dev/sda3 rauc.slot=A; " \
+	"sysboot usb 0:2 fat ${kernel_addr_r} /extlinux/extlinux-${systype}.conf; " \
 	"reset;\0"
 
 #endif /* _RAUC_BOOT_H */
