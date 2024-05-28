@@ -45,6 +45,12 @@ int regulator_common_of_to_plat(struct udevice *dev,
 			dev_read_u32_default(dev, "u-boot,off-on-delay-us", 0);
 	}
 
+	if ((flags & GPIOD_IS_OUT_ACTIVE) && dev_pdata->startup_delay_us)
+		udelay(dev_pdata->startup_delay_us);
+
+	if (!(flags & GPIOD_IS_OUT_ACTIVE) && dev_pdata->off_on_delay_us)
+		udelay(dev_pdata->off_on_delay_us);
+
 	return 0;
 }
 
