@@ -520,6 +520,7 @@ dtb-$(CONFIG_AM33XX) += \
 	am335x-brsmarc1.dtb \
 	am335x-draco.dtb \
 	am335x-evm.dtb \
+	am335x-inhub-hub-gm100.dtb \
 	am335x-evmsk.dtb \
 	am335x-bonegreen.dtb \
 	am335x-bonegreen-wireless.dtb \

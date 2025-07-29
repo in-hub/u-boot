@@ -157,7 +157,6 @@
 	BOOTENV
 #endif
 
-/* NS16550 Configuration */
 #define CFG_SYS_NS16550_COM1		0x44e09000	/* Base EVM has UART0 */
 #define CFG_SYS_NS16550_COM2		0x48022000	/* UART1 */
 #define CFG_SYS_NS16550_COM3		0x48024000	/* UART2 */

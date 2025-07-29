@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Copyright 2024 in.hub GmbH
+ */
+
+&mmc2 {
+	bootph-some-ram;
+};
+
+&am33xx_pinmux {
+	bootph-some-ram;
+};
+
+&uart0 {
+	bootph-some-ram;
+};
+
+&i2c0 {
+	bootph-some-ram;
+};
