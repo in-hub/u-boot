@@ -1,0 +1,7 @@
+in.hub CIN6S
+M:	Tobias Junghans <tobias.junghans@inhub.de>
+W:	https://www.inhub.de
+S:	Maintained
+F:	arch/arm/dts/imx6ull-inhub-cin6s.dts
+F:	board/inhub/cin6s/
+F:	include/configs/inhub-cin6s.h

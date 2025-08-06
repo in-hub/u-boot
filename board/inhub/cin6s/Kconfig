@@ -1,0 +1,12 @@
+if TARGET_INHUB_CIN6S
+
+config SYS_BOARD
+	default "cin6s"
+
+config SYS_VENDOR
+	default "inhub"
+
+config SYS_CONFIG_NAME
+	default "inhub-cin6s"
+
+endif

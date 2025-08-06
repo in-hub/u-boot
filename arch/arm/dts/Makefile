@@ -1038,6 +1038,7 @@ dtb-$(CONFIG_MX6ULL) += \
 	imx6ull-9x9-evk.dtb \
 	imx6ull-colibri-emmc-eval-v3.dtb \
 	imx6ull-colibri-eval-v3.dtb \
+	imx6ull-inhub-cin6s.dtb \
 	imx6ull-myir-mys-6ulx-eval.dtb \
 	imx6ull-seeed-npi-imx6ull-dev-board.dtb \
 	imx6ull-phytec-segin-ff-rdk-emmc.dtb \

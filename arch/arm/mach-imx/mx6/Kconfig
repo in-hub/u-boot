@@ -200,6 +200,14 @@ config TARGET_CM_FX6
 	select SUPPORT_SPL
 	imply CMD_DM
 
+config TARGET_INHUB_CIN6S
+	bool "in.hub CIN6S board"
+	depends on MX6ULL
+	select BOARD_LATE_INIT
+	select DM
+	select DM_THERMAL
+	select IOMUX_LPSR
+
 config TARGET_COLIBRI_IMX6
 	bool "Toradex Colibri iMX6 board"
 	select BOARD_LATE_INIT
@@ -819,6 +827,7 @@ source "board/grinn/liteboard/Kconfig"
 source "board/phytec/pcm058/Kconfig"
 source "board/phytec/pcl063/Kconfig"
 source "board/gateworks/gw_ventana/Kconfig"
+source "board/inhub/cin6s/Kconfig"
 source "board/kontron/sl-mx6ul/Kconfig"
 source "board/kosagi/novena/Kconfig"
 source "board/softing/vining_2000/Kconfig"

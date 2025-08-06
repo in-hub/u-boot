@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Copyright 2025 in.hub GmbH
+ */
+
+/ {
+	aliases {
+		bootph-all;
+		usb0 = &usbotg1;
+		ethernet0 = &fec1;
+		ethernet1 = &fec2;
+		mmc0 = &usdhc2;
+	};
+
+	wdt-reboot {
+		compatible = "wdt-reboot";
+		wdt = <&wdog1>;
+		bootph-pre-ram;
+	};
+};
+
+&wdog1 {
+	bootph-pre-ram;
+};
