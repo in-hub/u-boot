@@ -1,0 +1,78 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Copyright 2025 in.hub GmbH
+ */
+
+/dts-v1/;
+
+#include "fsl-imx8qxp-colibri.dts"
+
+/ {
+	model = "in.hub HUB-GM400";
+	compatible = "inhub,hub-gm400", "fsl,imx8qxp";
+};
+
+&iomuxc {
+	pinctrl-0 = <&pinctrl_hog0>, <&pinctrl_hog1>, <&pinctrl_hog2>, <&pinctrl_leds>;
+
+	/delete-node/ lpuart0grp;
+
+	pinctrl_leds: leds-grp {
+		fsl,pins = <
+			SC_P_UART2_RX_LSIO_GPIO1_IO24			0x14 /* SODIMM 19 / LED1G */
+			SC_P_UART2_TX_LSIO_GPIO1_IO23			0x14 /* SODIMM 21 / LED1R */
+			SC_P_MIPI_DSI1_GPIO0_01_LSIO_GPIO2_IO00	0x14 /* SODIMM 23 / LED2G */
+			SC_P_SAI1_RXD_LSIO_GPIO0_IO29			0x14 /* SODIMM 25 / LED2R */
+			SC_P_SAI1_RXC_LSIO_GPIO0_IO30			0x14 /* SODIMM 27 / LED3G */
+			SC_P_CSI_RESET_LSIO_GPIO3_IO03			0x14 /* SODIMM 29 / LED3R */
+		>;
+	};
+
+	pinctrl_enet2: enet2grp {
+		fsl,pins = <
+			SC_P_ESAI0_SCKR_CONN_ENET1_RGMII_TX_CTL	0x06000020	/* SODIMM 60 / TXEN */
+			SC_P_SPDIF0_TX_CONN_ENET1_RGMII_RX_CTL	0x06000020	/* SODIMM 50 / RXDV */
+			SC_P_SPDIF0_RX_CONN_ENET1_RGMII_RXD0		0x06000020	/* SODIMM 74 / RXD0 */
+			SC_P_ESAI0_TX3_RX2_CONN_ENET1_RGMII_RXD1	0x06000020	/* SODIMM 46 / RXD1 */
+			SC_P_ESAI0_TX4_RX1_CONN_ENET1_RGMII_TXD0	0x06000020	/* SODIMM 62 / TXD0 */
+			SC_P_ESAI0_TX5_RX0_CONN_ENET1_RGMII_TXD1	0x06000020	/* SODIMM 48 / TXD1 */
+			SC_P_ESAI0_TX2_RX3_CONN_ENET1_RMII_RX_ER	0x06000020	/* SODIMM 80 / RXER */
+			SC_P_ESAI0_FSR_CONN_ENET1_RCLK50M_IN 0x0000020	/* SODIMM 76 / CLK */
+		>;
+	};
+};
+
+&fec1 {
+	status = "okay";
+
+	mdio {
+		ethphy1: ethernet-phy@1 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			max-speed = <100>;
+			reg = <1>;
+		};
+	};
+};
+
+&fec2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_enet2>;
+	phy-mode = "rmii";
+	phy-handle = <&ethphy1>;
+	status = "okay";
+};
+
+&usbotg1 {
+	dr_mode = "peripheral";
+	status = "okay";
+};
+
+&usbphy1 {
+	status = "okay";
+};
+
+&usbotg3 {
+	dr_mode = "host";
+	over-current-active-low;
+	status = "okay";
+};
