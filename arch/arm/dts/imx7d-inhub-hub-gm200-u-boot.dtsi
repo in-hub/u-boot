@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Copyright 2025 in.hub GmbH
+ */
+
+#include "imx7s-u-boot.dtsi"
+
+/ {
+	aliases {
+		mmc0 = &usdhc3;
+	};
+
+	sysinfo {
+		compatible = "toradex,sysinfo";
+	};
+};
