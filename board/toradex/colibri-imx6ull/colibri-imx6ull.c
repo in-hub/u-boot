@@ -18,6 +18,7 @@
 #include <asm/mach-imx/boot_mode.h>
 #include <asm/mach-imx/iomux-v3.h>
 #include <asm/io.h>
+#include <command.h>
 #include <dm.h>
 #include <dm/platform_data/serial_mxc.h>
 #include <env.h>
@@ -50,6 +51,7 @@ static const iomux_v3_cfg_t flash_detection_pads[] = {
 };
 
 static bool is_emmc;
+static bool phy_configured = false;
 
 int dram_init(void)
 {
@@ -116,6 +118,18 @@ static int setup_fec(void)
 	return 0;
 }
 #endif /* CONFIG_FEC_MXC */
+
+
+int board_phy_config(struct phy_device *phydev)
+{
+	phy_configured = true;
+
+	if (phydev->drv->config)
+		phydev->drv->config(phydev);
+
+    return 0;
+}
+
 
 int board_init(void)
 {
@@ -204,6 +218,19 @@ int board_late_init(void)
 
 	return 0;
 }
+
+static int check_phy(void)
+{
+	if (!phy_configured)
+	{
+		printf("Resetting due to incorrectly initialized Ethernet phy!\n");
+		do_reset(NULL, 0, 0, NULL);
+	}
+	return 0;
+}
+
+EVENT_SPY_SIMPLE(EVT_LAST_STAGE_INIT, check_phy);
+
 
 #if defined(CONFIG_OF_LIBFDT) && defined(CONFIG_OF_BOARD_SETUP)
 int ft_board_setup(void *blob, struct bd_info *bd)
