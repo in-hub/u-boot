@@ -209,6 +209,9 @@ void dev_print(struct blk_desc *desc)
 	case UCLASS_EFI_MEDIA:
 		printf("EFI media Block Device %d\n", desc->devnum);
 		break;
+	case UCLASS_UBI:
+		puts("UBI block device\n");
+		break;
 	case UCLASS_INVALID:
 		puts("device type unknown\n");
 		return;

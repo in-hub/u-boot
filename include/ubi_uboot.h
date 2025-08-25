@@ -33,6 +33,18 @@
 
 #include <linux/errno.h>
 
+/* configurable */
+#define CONFIG_MTD_UBI_BEB_RESERVE	1
+
+/* debug options (Linux: drivers/mtd/ubi/Kconfig.debug) */
+#undef CONFIG_MTD_UBI_DEBUG
+#undef CONFIG_MTD_UBI_DEBUG_PARANOID
+#undef CONFIG_MTD_UBI_DEBUG_MSG
+#undef CONFIG_MTD_UBI_DEBUG_MSG_EBA
+#undef CONFIG_MTD_UBI_DEBUG_MSG_WL
+#undef CONFIG_MTD_UBI_DEBUG_MSG_IO
+#undef CONFIG_MTD_UBI_DEBUG_MSG_BLD
+
 /* build.c */
 #define get_device(...)
 #define put_device(...)
