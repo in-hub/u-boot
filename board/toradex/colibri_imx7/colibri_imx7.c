@@ -64,6 +64,11 @@ int dram_init(void)
 	return 0;
 }
 
+int board_mmc_get_env_dev(int devno)
+{
+	return 0;
+}
+
 static iomux_v3_cfg_t const flash_detection_pads[] = {
 	MX7D_PAD_SD3_RESET_B__GPIO6_IO11 | MUX_PAD_CTRL(FLASH_DETECTION_CTRL) | MUX_MODE_SION,
 };
